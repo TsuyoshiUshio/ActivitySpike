@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
@@ -50,8 +51,10 @@ namespace ActivitySpike
             var context = new Context()
             {
                 ActivityId = dependencyActivity.Id,
-                ParentId = dependencyActivity.ParentId
+                ParentId = dependencyActivity.ParentId,
+                ActivityStack = new Stack<Activity>()
             };
+            context.ActivityStack.Push(requestActivity);
             await contexts.AddAsync(context);
             dependencyActivity.Stop();
 
@@ -66,10 +69,19 @@ namespace ActivitySpike
             ILogger log)
         {
             log.LogInformation($"Orchestration Started.");
-            var requestActivity = new Activity("Orchestration Request");
-            requestActivity.SetParentId(context.ActivityId);
-            requestActivity.Start();
+            Activity requestActivity = null;
+            var count = context.ActivityStack.Count;
+            if (count == 1) // In case of the initial execution.
+            {
+                requestActivity = new Activity("Orchestration Request");
+                requestActivity.SetParentId(context.ActivityId);
+            }
+            else
+            {
+                requestActivity = context.ActivityStack.Peek();
+            }
 
+            requestActivity.Start();
             if (context.Completed)
             {
                 // Finish. Do nothing. 
@@ -82,8 +94,17 @@ namespace ActivitySpike
                 var c = new Context()
                 {
                     ActivityId = dependencyActivity.Id,
-                    ParentId = dependencyActivity.ParentId
+                    ParentId = dependencyActivity.ParentId,
                 };
+                if (count == 1)
+                {
+                    c.ActivityStack.Push(requestActivity);
+                }
+                else
+                {
+                    c.ActivityStack = context.ActivityStack;
+                }
+
                 await contexts.AddAsync(c);
                 dependencyActivity.Stop();
   
@@ -109,6 +130,7 @@ namespace ActivitySpike
               {
                   ActivityId = dependencyActivity.Id,
                   ParentId = dependencyActivity.ParentId,
+                  ActivityStack = context.ActivityStack, // I skip the code for stack for the activity.
                   Completed = true
               };
             await contexts.AddAsync(c);
@@ -116,6 +138,7 @@ namespace ActivitySpike
             requestActivity.Stop();
 
         }
+
 
     }
     
