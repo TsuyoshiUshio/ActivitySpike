@@ -66,14 +66,10 @@ namespace ActivitySpike
             var dependencyActivity = new Activity("HttpTrigger Dependency Queue output");
             dependencyActivity.SetParentId(requestActivity.Id);
             dependencyActivity.Start();
-            var list = new List<SubsetActivity>();
-            list.Add(subsetActivity);
             var context = new Context()
             {
                 ActivityId = dependencyActivity.Id,
                 ParentId = dependencyActivity.ParentId,
-                Stack = list,
-
             };
             var dependencyTelemetry = new DependencyTelemetry { Name = "ActivitySpike:: Enqueue" };
             dependencyTelemetry.Id = dependencyActivity.Id;
@@ -100,8 +96,8 @@ namespace ActivitySpike
         {
             log.LogInformation($"Orchestration Started.");
             Activity requestActivity = null;
-            var count = context.Stack.Count;
-            if (count == 1) // In case of the initial execution.
+
+            if (context.OrchestrationActivity == null) // In case of the initial execution.
             {
                 requestActivity = new Activity("Activity Spike: Orchestration Request");
                 requestActivity.SetParentId(context.ActivityId);
@@ -109,10 +105,9 @@ namespace ActivitySpike
             else
             {
                 requestActivity = new Activity("Activity Spike: Orchestration Request");
-                var current = context.Stack.LastOrDefault();
-                var property = typeof(Activity).GetProperty("Id", BindingFlags.Public);
-                property.SetValue(requestActivity, current.ActivityId);
-                requestActivity.SetParentId(current.ParentId);
+                var property = typeof(Activity).GetProperty("Id", BindingFlags.Public | BindingFlags.Instance);
+                property.SetValue(requestActivity, context.OrchestrationActivity.ActivityId);
+                requestActivity.SetParentId(context.OrchestrationActivity.ParentId);
             }
 
             requestActivity.Start();
@@ -123,9 +118,19 @@ namespace ActivitySpike
                 RootId = requestActivity.RootId
             };
             var requestTelemetry = new RequestTelemetry { Name = "Activity Spike: Ochestration Result" };
-            requestTelemetry.Id = requestActivity.Id;
-            requestTelemetry.Context.Operation.Id = requestActivity.RootId;
-            requestTelemetry.Context.Operation.ParentId = requestActivity.ParentId;
+
+            if (context.OrchestrationActivity == null)
+            {
+                requestTelemetry.Id = requestActivity.Id;
+                requestTelemetry.Context.Operation.Id = requestActivity.RootId;
+                requestTelemetry.Context.Operation.ParentId = requestActivity.ParentId;
+            }
+            else
+            {
+                requestTelemetry.Id = context.OrchestrationActivity.ActivityId;
+                requestTelemetry.Context.Operation.Id = context.OrchestrationActivity.RootId;
+                requestTelemetry.Context.Operation.ParentId = context.OrchestrationActivity.ParentId;
+            }
 
             requestTelemetry.Start();
 
@@ -150,16 +155,8 @@ namespace ActivitySpike
                 {
                     ActivityId = dependencyActivity.Id,
                     ParentId = dependencyActivity.ParentId,
-                    Stack = new List<SubsetActivity>()
+                    OrchestrationActivity = subsetActivity
                 };
-                if (count == 1)
-                {
-                    c.Stack.Add(subsetActivity);
-                }
-                else
-                {
-                    c.Stack = context.Stack;
-                }
 
                 await contexts.AddAsync(c);
                 dependencyActivity.Stop();
@@ -205,7 +202,7 @@ namespace ActivitySpike
               {
                   ActivityId = dependencyActivity.Id,
                   ParentId = dependencyActivity.ParentId,
-                  Stack = context.Stack , // I skip the code for stack for the activity.
+                  OrchestrationActivity = context.OrchestrationActivity , // I skip the code for stack for the activity.
                   Completed = true
               };
             await contexts.AddAsync(c);

@@ -19,7 +19,7 @@ namespace ActivitySpike
 
         public bool Completed { get; set; }
 
-        public List<SubsetActivity> Stack { get; set; }
+        public SubsetActivity OrchestrationActivity { get; set; } 
 
         public Context()
         {
