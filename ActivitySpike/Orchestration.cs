@@ -48,20 +48,12 @@ namespace ActivitySpike
             // No parent from the start
             requestActivity.Start();
             var requestTelemetry = new RequestTelemetry {Name = "ActivitySpike: HttpTrigger Request"};
-            requestTelemetry.Id = requestActivity.Id;
-            requestTelemetry.Context.Operation.Id = requestActivity.RootId;
-            requestTelemetry.Context.Operation.ParentId = requestActivity.ParentId;
+            requestTelemetry.SetActivity(requestActivity);
 
             requestTelemetry.Start();
 
             requestTelemetry.Stop();
             client.Track(requestTelemetry);
-            var subsetActivity = new SubsetActivity()
-            {
-                ActivityId = requestActivity.Id,
-                ParentId =  requestActivity.ParentId,
-                RootId = requestActivity.RootId
-            };
 
             var dependencyActivity = new Activity("HttpTrigger Dependency Queue output");
             dependencyActivity.SetParentId(requestActivity.Id);
@@ -72,9 +64,7 @@ namespace ActivitySpike
                 ParentId = dependencyActivity.ParentId,
             };
             var dependencyTelemetry = new DependencyTelemetry { Name = "ActivitySpike:: Enqueue" };
-            dependencyTelemetry.Id = dependencyActivity.Id;
-            dependencyTelemetry.Context.Operation.Id = dependencyActivity.RootId;
-            dependencyTelemetry.Context.Operation.ParentId = dependencyActivity.ParentId;
+            dependencyTelemetry.SetActivity(dependencyActivity);
             dependencyTelemetry.Start();
             
            
@@ -105,6 +95,8 @@ namespace ActivitySpike
             else
             {
                 requestActivity = new Activity("Activity Spike: Orchestration Request");
+                // After Activity.SetParentId then Start the actvitiy, it will create a new Id. However, it is not Identical as the last execution. 
+                // This is necessary. Or directly set from SubsetActivity. 
                 var property = typeof(Activity).GetProperty("Id", BindingFlags.Public | BindingFlags.Instance);
                 property.SetValue(requestActivity, context.OrchestrationActivity.ActivityId);
                 requestActivity.SetParentId(context.OrchestrationActivity.ParentId);
@@ -121,9 +113,7 @@ namespace ActivitySpike
 
             if (context.OrchestrationActivity == null)
             {
-                requestTelemetry.Id = requestActivity.Id;
-                requestTelemetry.Context.Operation.Id = requestActivity.RootId;
-                requestTelemetry.Context.Operation.ParentId = requestActivity.ParentId;
+                requestTelemetry.SetActivity(requestActivity);
             }
             else
             {
@@ -133,42 +123,42 @@ namespace ActivitySpike
             }
 
             requestTelemetry.Start();
+            // Only the last execution, we track it. 
+            var dependencyActivity = new Activity("Activity Spike: Orchestration Dependency");
+            dependencyActivity.SetParentId(requestActivity.Id);
+            dependencyActivity.Start();
+
+            var dependencyTelemetry = new DependencyTelemetry { Name = "Activity Spike: Orchestration Dependency" };
+            dependencyTelemetry.SetActivity(dependencyActivity);
+
+            dependencyTelemetry.Start();
+
+            var c = new Context()
+            {
+                ActivityId = requestActivity.Id,
+                ParentId = requestActivity.ParentId,
+                OrchestrationActivity = subsetActivity
+            };
+
+
+            dependencyActivity.Stop();
+            dependencyTelemetry.Stop();
 
             if (context.Completed)
             {
-                // Finish. Do nothing. 
+                client.Track(dependencyTelemetry);
             }
             else
             {
-                var dependencyActivity = new Activity("Activity Spike: Orchestration Dependency");
-                dependencyActivity.SetParentId(requestActivity.Id);
-                dependencyActivity.Start();
-
-                var dependencyTelemetry = new DependencyTelemetry { Name = "Activity Spike: Orchestration Dependency" };
-                dependencyTelemetry.Id = dependencyActivity.Id;
-                dependencyTelemetry.Context.Operation.Id = dependencyActivity.RootId;
-                dependencyTelemetry.Context.Operation.ParentId = dependencyActivity.ParentId;
-
-                dependencyTelemetry.Start();
-
-                var c = new Context()
-                {
-                    ActivityId = dependencyActivity.Id,
-                    ParentId = dependencyActivity.ParentId,
-                    OrchestrationActivity = subsetActivity
-                };
-
                 await contexts.AddAsync(c);
-                dependencyActivity.Stop();
-                dependencyTelemetry.Stop();
-                client.Track(dependencyTelemetry);
-
+                // We don't need to emit telemetry for intermediate execution.
             }
 
             requestActivity.Stop();
 
             requestTelemetry.Stop();
-            client.Track(requestTelemetry);
+            if (context.OrchestrationActivity == null) // In case of the initial execution.
+                client.Track(requestTelemetry);
         }
 
         [FunctionName("Activity")]
@@ -182,9 +172,7 @@ namespace ActivitySpike
             requestActivity.Start();
 
             var requestTelemetry = new RequestTelemetry { Name = "Activity Spike: Activity Function Request" };
-            requestTelemetry.Id = requestActivity.Id;
-            requestTelemetry.Context.Operation.Id = requestActivity.RootId;
-            requestTelemetry.Context.Operation.ParentId = requestActivity.ParentId;
+            requestTelemetry.SetActivity(requestActivity);
 
             requestTelemetry.Start();
 
@@ -193,9 +181,7 @@ namespace ActivitySpike
             dependencyActivity.Start();
 
             var dependencyTelemetry = new DependencyTelemetry { Name = "Activity Spike: Activity Function Dependency" };
-            dependencyTelemetry.Id = dependencyActivity.Id;
-            dependencyTelemetry.Context.Operation.Id = dependencyActivity.RootId;
-            dependencyTelemetry.Context.Operation.ParentId = dependencyActivity.ParentId;
+            dependencyTelemetry.SetActivity(dependencyActivity);
             dependencyTelemetry.Start();
 
             var c = new Context()
