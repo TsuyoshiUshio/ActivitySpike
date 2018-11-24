@@ -15,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.ApplicationInsights.DependencyCollector;
+using Microsoft.ApplicationInsights.W3C;
 
 namespace ActivitySpike
 {
@@ -28,9 +29,11 @@ namespace ActivitySpike
             module.ExcludeComponentCorrelationHttpHeadersOnDomains.Add("core.windows.net");
             module.Initialize(TelemetryConfiguration.Active);
 
+
             var config = new TelemetryConfiguration();
             // Set the instrumentKey
             config.InstrumentationKey = Environment.GetEnvironmentVariable("InstrumentKey");
+            
 
             client = new TelemetryClient(config);
 
@@ -45,6 +48,7 @@ namespace ActivitySpike
         {
             log.LogInformation("Accept the request. Incoming request doesn't have correlation info.");
             var requestActivity = new Activity("ActivitySpike: HttpTrigger Request");
+
             // No parent from the start
             requestActivity.Start();
             var requestTelemetry = new RequestTelemetry {Name = "ActivitySpike: HttpTrigger Request"};
