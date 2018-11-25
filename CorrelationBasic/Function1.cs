@@ -46,7 +46,7 @@ namespace CorrelationBasic
                 var current = Activity.Current;
                 log.LogInformation("C# HTTP trigger function processed a request.");
                 var requestActivity = new Activity("Sample: Function 1 HttpRequest");
-                requestActivity.Start();
+                requestActivity.Start(); // You can omit this code.
 
                 var requestOperation = telemetryClient.StartOperation<RequestTelemetry>(requestActivity);
 
@@ -54,7 +54,7 @@ namespace CorrelationBasic
          
                 var dependencyActivity = new Activity("Sample: Function 1 Enqueue");
                 dependencyActivity.SetParentId(requestActivity.Id); // You can comit this code. 
-                dependencyActivity.Start();
+                dependencyActivity.Start(); // You can omit this code. 
                 var dependencyOperation = telemetryClient.StartOperation<DependencyTelemetry>(dependencyActivity);
                 await parentIds.AddAsync(dependencyActivity.Id);
 
@@ -74,7 +74,7 @@ namespace CorrelationBasic
         {
             var requestActivity = new Activity("Sample: Function 2 Queue Request");
             requestActivity.SetParentId(parentId);
-            requestActivity.Start();
+            requestActivity.Start(); // You can omit this code.
 
             var requestOperation = telemetryClient.StartOperation<RequestTelemetry>(requestActivity);
 
