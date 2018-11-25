@@ -70,7 +70,7 @@ namespace ActivitySpike
             var dependencyTelemetry = new DependencyTelemetry { Name = "ActivitySpike:: Enqueue" };
             dependencyTelemetry.SetActivity(dependencyActivity);
             dependencyTelemetry.Start();
-            
+            client.StartOperation(requestTelemetry);
            
             await contexts.AddAsync(context);
             dependencyActivity.Stop();

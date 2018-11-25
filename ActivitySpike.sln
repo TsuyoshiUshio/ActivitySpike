@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerializeSpike", "Serialize
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityW3CSpike", "ActivityW3CSpike\ActivityW3CSpike.csproj", "{A5332FE9-50B8-4A4B-BC0E-99447028A51C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorrelationBasic", "CorrelationBasic\CorrelationBasic.csproj", "{9DF364AA-691E-4D3B-8AB7-EC55CB2F5A7F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A5332FE9-50B8-4A4B-BC0E-99447028A51C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5332FE9-50B8-4A4B-BC0E-99447028A51C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5332FE9-50B8-4A4B-BC0E-99447028A51C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DF364AA-691E-4D3B-8AB7-EC55CB2F5A7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DF364AA-691E-4D3B-8AB7-EC55CB2F5A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DF364AA-691E-4D3B-8AB7-EC55CB2F5A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DF364AA-691E-4D3B-8AB7-EC55CB2F5A7F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
