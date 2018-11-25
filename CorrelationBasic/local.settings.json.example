@@ -1,0 +1,9 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "InstrumentKey": "YOUR_APPLICATION_INSIGHTS_INSTRUMENT_KEY_HERE",
+    "ConnectionString": "UseDevelopmentStorage=true"
+  }
+}
