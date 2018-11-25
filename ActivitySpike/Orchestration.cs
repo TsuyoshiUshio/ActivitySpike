@@ -48,7 +48,7 @@ namespace ActivitySpike
         {
             log.LogInformation("Accept the request. Incoming request doesn't have correlation info.");
             var requestActivity = new Activity("ActivitySpike: HttpTrigger Request");
-
+            var current = Activity.Current;
             // No parent from the start
             requestActivity.Start();
             var requestTelemetry = new RequestTelemetry {Name = "ActivitySpike: HttpTrigger Request"};
