@@ -48,9 +48,10 @@ namespace ActivitySpike
         {
             log.LogInformation("Accept the request. Incoming request doesn't have correlation info.");
             var requestActivity = new Activity("ActivitySpike: HttpTrigger Request");
-            var current = Activity.Current;
+            var current = Activity.Current; // You can refer the current Activity. That is automatically created by HttpTrigger.
             // No parent from the start
             requestActivity.Start();
+
             var requestTelemetry = new RequestTelemetry {Name = "ActivitySpike: HttpTrigger Request"};
             requestTelemetry.SetActivity(requestActivity);
 
@@ -60,7 +61,7 @@ namespace ActivitySpike
             client.Track(requestTelemetry);
 
             var dependencyActivity = new Activity("HttpTrigger Dependency Queue output");
-            dependencyActivity.SetParentId(requestActivity.Id);
+            dependencyActivity.SetParentId(requestActivity.Id); // You can omit this code
             dependencyActivity.Start();
             var context = new Context()
             {
@@ -100,7 +101,7 @@ namespace ActivitySpike
             {
                 requestActivity = new Activity("Activity Spike: Orchestration Request");
                 // After Activity.SetParentId then Start the actvitiy, it will create a new Id. However, it is not Identical as the last execution. 
-                // This is necessary. Or directly set from SubsetActivity. 
+                // This is necessary. Or directly set from SubsetActivity. This is not recommended. However, there is no way for this protocol.
                 var property = typeof(Activity).GetProperty("Id", BindingFlags.Public | BindingFlags.Instance);
                 property.SetValue(requestActivity, context.OrchestrationActivity.ActivityId);
                 requestActivity.SetParentId(context.OrchestrationActivity.ParentId);
@@ -129,7 +130,7 @@ namespace ActivitySpike
             requestTelemetry.Start();
             // Only the last execution, we track it. 
             var dependencyActivity = new Activity("Activity Spike: Orchestration Dependency");
-            dependencyActivity.SetParentId(requestActivity.Id);
+            dependencyActivity.SetParentId(requestActivity.Id); // You can omit this.
             dependencyActivity.Start();
 
             var dependencyTelemetry = new DependencyTelemetry { Name = "Activity Spike: Orchestration Dependency" };
@@ -181,7 +182,7 @@ namespace ActivitySpike
             requestTelemetry.Start();
 
             var dependencyActivity = new Activity("Activity FUnction Dependency");
-            dependencyActivity.SetParentId(requestActivity.Id);
+            dependencyActivity.SetParentId(requestActivity.Id);  // You can omit this.
             dependencyActivity.Start();
 
             var dependencyTelemetry = new DependencyTelemetry { Name = "Activity Spike: Activity Function Dependency" };

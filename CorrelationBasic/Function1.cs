@@ -53,7 +53,7 @@ namespace CorrelationBasic
                 telemetryClient.StopOperation(requestOperation);
          
                 var dependencyActivity = new Activity("Sample: Function 1 Enqueue");
-                dependencyActivity.SetParentId(requestActivity.Id); // You can comit this code. 
+                dependencyActivity.SetParentId(requestActivity.Id); // You can omit this code. 
                 dependencyActivity.Start(); // You can omit this code. 
                 var dependencyOperation = telemetryClient.StartOperation<DependencyTelemetry>(dependencyActivity);
                 await parentIds.AddAsync(dependencyActivity.Id);
