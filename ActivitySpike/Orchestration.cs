@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.ApplicationInsights;
@@ -28,6 +29,8 @@ namespace ActivitySpike
             DependencyTrackingTelemetryModule module = new DependencyTrackingTelemetryModule();
             module.ExcludeComponentCorrelationHttpHeadersOnDomains.Add("core.windows.net");
             module.Initialize(TelemetryConfiguration.Active);
+            HttpClient clinet = new HttpClient();
+            clinet.DefaultRequestHeaders.Add("key", "value");
 
 
             var config = new TelemetryConfiguration();

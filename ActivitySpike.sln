@@ -9,11 +9,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivityConsoleSpike", "Act
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AsyncLocalSpike", "AsyncLocalSpike\AsyncLocalSpike.csproj", "{ECEF3EE9-CCF3-4647-A444-3DD18CEE54EE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SerializeSpike", "SerializeSpike\SerializeSpike.csproj", "{83533615-6AD0-4D8A-AA89-DD963313D137}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerializeSpike", "SerializeSpike\SerializeSpike.csproj", "{83533615-6AD0-4D8A-AA89-DD963313D137}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ActivityW3CSpike", "ActivityW3CSpike\ActivityW3CSpike.csproj", "{A5332FE9-50B8-4A4B-BC0E-99447028A51C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ActivityW3CSpike", "ActivityW3CSpike\ActivityW3CSpike.csproj", "{A5332FE9-50B8-4A4B-BC0E-99447028A51C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CorrelationBasic", "CorrelationBasic\CorrelationBasic.csproj", "{9DF364AA-691E-4D3B-8AB7-EC55CB2F5A7F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CorrelationBasic", "CorrelationBasic\CorrelationBasic.csproj", "{9DF364AA-691E-4D3B-8AB7-EC55CB2F5A7F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagnosticSourceSpike", "DiagnosticSourceSpike\DiagnosticSourceSpike.csproj", "{16DE3D22-99C2-4164-896B-9022AC77A0D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiagnosticSourceSpikeForFramework", "DiagnosticSourceSpikeForFramework\DiagnosticSourceSpikeForFramework.csproj", "{EF5D4A87-4B2D-4F35-9C06-9E395E4D722B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{9DF364AA-691E-4D3B-8AB7-EC55CB2F5A7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DF364AA-691E-4D3B-8AB7-EC55CB2F5A7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DF364AA-691E-4D3B-8AB7-EC55CB2F5A7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16DE3D22-99C2-4164-896B-9022AC77A0D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16DE3D22-99C2-4164-896B-9022AC77A0D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16DE3D22-99C2-4164-896B-9022AC77A0D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16DE3D22-99C2-4164-896B-9022AC77A0D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF5D4A87-4B2D-4F35-9C06-9E395E4D722B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF5D4A87-4B2D-4F35-9C06-9E395E4D722B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF5D4A87-4B2D-4F35-9C06-9E395E4D722B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF5D4A87-4B2D-4F35-9C06-9E395E4D722B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
